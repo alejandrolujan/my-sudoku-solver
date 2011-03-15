@@ -1,6 +1,5 @@
 package sudoku;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,18 +8,16 @@ public abstract class BoxContainer{
 	
 	protected List<Box> boxes;
 
-	public BoxContainer(){
-		boxes = new ArrayList<Box>();
-	}
-	
 	public void addBox(Box box){
 		boxes.add(box);
 	}
 	
 	public void discard(Integer discard, Box initiator){
-		for(Box box : boxes)
-			if(box!=initiator)
+		for(Box box : boxes){
+			if(box!=initiator){
 				box.discard(discard);
+			}
+		}
 	}
 	
 	public boolean findNakedTuples(){
@@ -52,8 +49,9 @@ public abstract class BoxContainer{
 		for(Box box : boxes){
 			Set<Integer> potentials = new HashSet<Integer>();
 			potentials.addAll(box.getPotentialValues());
-			if(potentials.equals(values))
+			if(potentials.equals(values)){
 				tuple.add(box);
+			}
 		}
 		
 		return (tuple.size() == values.size()) ? tuple : null;
@@ -78,8 +76,8 @@ public abstract class BoxContainer{
 			}
 		}
 		
-		for(int i=1; i<=9; i++)
-			for(int j=i+1; j<=9; j++)
+		for(int i=1; i<=9; i++){
+			for(int j=i+1; j<=9; j++){
 				for(int k=j+1; k<=9; k++){
 					values.clear();
 					values.add(i);
@@ -91,6 +89,8 @@ public abstract class BoxContainer{
 					if(hiddenTriplet!=null)
 						updated |= processHiddenTuple(hiddenTriplet, values);
 				}
+			}
+		}
 		
 		return updated;
 	}
@@ -99,13 +99,16 @@ public abstract class BoxContainer{
 		Set<Box> tuple = new HashSet<Box>();
 		Set<Integer> containedValues = new HashSet<Integer>();
 		
-		for(Box box : boxes)
-			if(box.getValue()==null)			// only process unsolved boxes
-				for(Integer value : values)
+		for(Box box : boxes){
+			if(box.getValue()==null){			// only process unsolved boxes
+				for(Integer value : values){
 					if(box.isPotential(value)){	// If box contains at least one of values
 						tuple.add(box);			// it belongs to the tuple
 						containedValues.add(value);
 					}
+				}
+			}
+		}
 		
 		return (tuple.size() == values.size() && values.size() == containedValues.size()) ? tuple : null;
 	}
@@ -113,8 +116,15 @@ public abstract class BoxContainer{
 	private boolean processHiddenTuple(Set<Box> tuple, Set<Integer> values){
 		boolean updated = false;
 		
-		for(Box box : tuple)
+		for(Box box : tuple){
 			updated |= box.discardAllBut(values);
+		}
+		
+		return updated;
+	}
+	
+	public boolean processOmission(){
+		boolean updated = false;
 		
 		return updated;
 	}
@@ -125,8 +135,9 @@ public abstract class BoxContainer{
 		for(Box box : boxes){
 			Integer value = box.getValue();
 			
-			if(value==null || !valueSet.add(value))
+			if(value==null || !valueSet.add(value)){
 				return false;
+			}
 		}
 		
 		return valueSet.size()==9;

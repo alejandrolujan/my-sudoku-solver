@@ -15,9 +15,9 @@ public class Board{
 		sectors = new ArrayList<Sector>();
 		
 		for(int i=0; i<9; i++){
-			rows.add(new Row(i));
-			columns.add(new Column(i));
-			sectors.add(new Sector(i));
+			rows.add(new Row());
+			columns.add(new Column());
+			sectors.add(new Sector());
 		}
 		
 		for(int i=0; i<9; i++){
@@ -31,7 +31,6 @@ public class Board{
 	
 	public void assignValue(int row, int column, int value){
 		rows.get(row).assignValue(column, value);
-		//System.out.println(this.toString());
 	}
 	
 	public void solve(){
@@ -57,14 +56,6 @@ public class Board{
 		
 		for(Row row : rows)
 			if(!row.isSolved()) 
-				return false;
-		
-		for(Column column : columns)
-			if(!column.isSolved()) 
-				return false;
-		
-		for(Sector sector : sectors)
-			if(!sector.isSolved()) 
 				return false;
 		
 		return true;
