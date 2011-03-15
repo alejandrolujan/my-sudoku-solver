@@ -23,7 +23,7 @@ public class Board{
 		for(int i=0; i<9; i++){
 			for(int j=0; j<9; j++){
 				int sector = 3*(i/3) + (j/3);
-				Box box = new Box(sectors.get(sector), rows.get(i), columns.get(j));
+				new Box(sectors.get(sector), rows.get(i), columns.get(j));
 			}
 		}
 	}
@@ -41,13 +41,13 @@ public class Board{
 			updated = false;
 			
 			for(Row row : rows)
-				updated |= row.findLoners();
+				updated |= row.findNakedTuples() || row.findHiddenTuples();
 			
 			for(Column column : columns)
-				updated |= column.findLoners();
+				updated |= column.findNakedTuples() || column.findHiddenTuples();
 			
 			for(Sector sector : sectors)
-				updated |= sector.findLoners();
+				updated |= sector.findNakedTuples() || sector.findHiddenTuples();
 			
 		} while(updated);	
 		
