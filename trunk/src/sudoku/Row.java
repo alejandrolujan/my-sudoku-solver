@@ -2,21 +2,10 @@ package sudoku;
 
 public class Row extends BoxContainer{
 	
-	private int rowNumber;
-	
-	public Row(int rowNumber) {
-		super();
-		this.rowNumber = rowNumber;
-	}
-
 	public void assignValue(int column, int value){
 		boxes.get(column).assignValue(value);
 	}
 	
-	public int getRowNumber() {
-		return rowNumber;
-	}
-
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 		
