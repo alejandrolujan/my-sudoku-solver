@@ -1,11 +1,13 @@
 package sudoku;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadPoolExecutor.DiscardPolicy;
 
 public class Box{
 
-	private List<Integer> potentialValues;
+	private Set<Integer> potentialValues;
 	private Integer value;
 	private Sector sector;
 	private Column column;
@@ -14,7 +16,7 @@ public class Box{
 	public Box(Sector sector, Row row, Column column){
 		value = null;
 		
-		potentialValues = new ArrayList<Integer>();
+		potentialValues = Collections.newSetFromMap(new ConcurrentHashMap<Integer, Boolean>());
 		
 		for(int i=1; i<=9; i++)
 			potentialValues.add(i);
@@ -32,17 +34,23 @@ public class Box{
 		return value;
 	}
 	
-	public void discard(Integer discard){
+	public boolean discard(Integer discard){
+		
 		if(discard.equals(value))
 			throw new IllegalStateException("Trying to discard actual value");
 		
 //		System.out.println("Discarding " + discard + " from " + row.getRowNumber() + "," + column.getColumnNumber() + " [" + sector.getSectorNumber() + "]");
 		
+		boolean updated = false;
+		
 		if(potentialValues.remove(discard)){
+			updated = true;
 			if(potentialValues.size()==1){
-				assignValue(potentialValues.get(0));
+				assignValue((potentialValues.toArray(new Integer[0]))[0]);
 			}
 		}
+		
+		return updated;
 	}
 	
 	public void assignValue(Integer actual){
@@ -60,5 +68,21 @@ public class Box{
 
 	public boolean isPotential(int i) {
 		return potentialValues.contains(i);
+	}
+
+	public Set<Integer> getPotentialValues() {
+		return potentialValues;
+	}
+
+	public boolean discardAllBut(Set<Integer> values) {
+		boolean updated = false;
+		
+		for(Integer potential : potentialValues){
+			if(!values.contains(potential)){
+				updated |= discard(potential);
+			}
+		}
+		
+		return updated;
 	}
 }
