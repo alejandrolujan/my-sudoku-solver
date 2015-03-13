@@ -1,0 +1,1 @@
+My attempt at solving sudoku using inference
